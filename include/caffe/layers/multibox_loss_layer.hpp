@@ -92,6 +92,7 @@ class MultiBoxLossLayer : public LossLayer<Dtype> {
 
   MultiBoxLossParameter multibox_loss_param_;
   int num_classes_;
+  int aspect_classes_;
   bool share_location_;
   MatchType match_type_;
   float overlap_threshold_;

@@ -1336,7 +1336,7 @@ template void GetLocPredictions(const double* loc_data, const int num,
       const int num_preds_per_class, const int num_loc_classes,
       const bool share_location, vector<LabelBBox>* loc_preds);
 
-//new4pose
+
 
 
 template <typename Dtype>

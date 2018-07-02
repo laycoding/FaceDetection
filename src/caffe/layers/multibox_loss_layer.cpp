@@ -29,7 +29,7 @@ void MultiBoxLossLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
   num_classes_ = multibox_loss_param.num_classes();
   CHECK_GE(num_classes_, 1) << "num_classes should not be less than 1.";
   aspect_classes_ = 4;
-  CHECK_EQ(aspect_classes_, 4) << "aspect_classes_ should be 4"
+  CHECK_EQ(aspect_classes_, 4) << "aspect_classes_ should be 4";
   share_location_ = multibox_loss_param.share_location();
   loc_classes_ = share_location_ ? 1 : num_classes_;
   background_label_id_ = multibox_loss_param.background_label_id();

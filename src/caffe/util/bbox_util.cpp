@@ -2018,7 +2018,7 @@ void EncodePosePrediction(const Dtype* pose_data, const int num,
   //            mining_type != MultiBoxLossParameter_MiningType_NONE);
   // }
   //do_neg_mining = mining_type != MultiBoxLossParameter_MiningType_NONE;
-  const ConfLossType conf_loss_type = multibox_loss_param.conf_loss_type();
+  const ConfLossType pose_loss_type = multibox_loss_param.pose_loss_type();
   int count = 0;
   for (int i = 0; i < num; ++i) {
     if (all_gt_bboxes.find(i) != all_gt_bboxes.end()) {
@@ -2034,15 +2034,15 @@ void EncodePosePrediction(const Dtype* pose_data, const int num,
           }
           const int gt_label = all_gt_bboxes.find(i)->second[match_index[j]].pose();
           int idx = do_neg_mining ? count : j;
-          switch (conf_loss_type) {
+          switch (pose_loss_type) {
             case MultiBoxLossParameter_ConfLossType_SOFTMAX:
-              conf_gt_data[idx] = gt_label;
+              pose_gt_data[idx] = gt_label;
               break;
             case MultiBoxLossParameter_ConfLossType_LOGISTIC:
-              conf_gt_data[idx * aspect_classes + gt_label] = 1;
+              pose_gt_data[idx * aspect_classes + gt_label] = 1;
               break;
             default:
-              LOG(FATAL) << "Unknown conf loss type.";
+              LOG(FATAL) << "Unknown pose loss type.";
           }
           // if (do_neg_mining) {
           //   // Copy scores for matched bboxes.
@@ -2082,7 +2082,7 @@ void EncodePosePrediction(const Dtype* pose_data, const int num,
     // } else {
     //   conf_gt_data += num_priors;
     // }
-    conf_gt_data += num_priors;
+    pose_gt_data += num_priors;
   }
 }
 

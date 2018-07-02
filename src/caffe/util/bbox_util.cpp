@@ -2029,6 +2029,7 @@ void EncodePosePrediction(const Dtype* pose_data, const int num,
       }
     pose_gt_data += num_priors;
   }
+  }
 }
 
 // Explicite initialization.

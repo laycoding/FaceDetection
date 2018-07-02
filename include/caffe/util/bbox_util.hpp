@@ -373,6 +373,7 @@ void EncodeConfPrediction(const Dtype* conf_data, const int num,
 //    all_gt_bboxes: stores ground truth bboxes for the batch.
 //    pose_pred_data: stores the confidence prediction results.
 //    pose_gt_data: stores the confidence ground truth.
+
 template <typename Dtype>
 void EncodePosePrediction(const Dtype* pose_data, const int num,
       const int num_priors, const MultiBoxLossParameter& multibox_loss_param,

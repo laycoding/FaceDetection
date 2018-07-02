@@ -76,7 +76,7 @@ class MultiBoxLossLayer : public LossLayer<Dtype> {
   Blob<Dtype> conf_loss_;
 
   // The internal pose loss layer.
-  shared_ptr<Layer<Dtype> > psoe_loss_layer_;
+  shared_ptr<Layer<Dtype> > pose_loss_layer_;
   ConfLossType pose_loss_type_;
   float pose_weight_;
   // bottom vector holder used in Forward function.

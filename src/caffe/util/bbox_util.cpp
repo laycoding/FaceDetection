@@ -2019,7 +2019,7 @@ void EncodePosePrediction(const Dtype* pose_data, const int num,
   //            mining_type != MultiBoxLossParameter_MiningType_NONE);
   // }
   //do_neg_mining = mining_type != MultiBoxLossParameter_MiningType_NONE;
-  const ConfLossType pose_loss_type = multibox_loss_param.pose_loss_type();
+  const PoseLossType pose_loss_type = multibox_loss_param.pose_loss_type();
   int count = 0;
   for (int i = 0; i < num; ++i) {
     if (all_gt_bboxes.find(i) != all_gt_bboxes.end()) {
@@ -2088,18 +2088,18 @@ void EncodePosePrediction(const Dtype* pose_data, const int num,
 }
 
 // Explicite initialization.
-template void EncodePosePrediction(const float* conf_data, const int num,
+template void EncodePosePrediction(const float* pose_data, const int num,
       const int num_priors, const MultiBoxLossParameter& multibox_loss_param,
       const vector<map<int, vector<int> > >& all_match_indices,
       const vector<vector<int> >& all_neg_indices,
       const map<int, vector<NormalizedBBox> >& all_gt_bboxes,
-      float* conf_pred_data, float* conf_gt_data);
-template void EncodePosePrediction(const double* conf_data, const int num,
+      float* pose_pred_data, float* pose_gt_data);
+template void EncodePosePrediction(const double* pose_data, const int num,
       const int num_priors, const MultiBoxLossParameter& multibox_loss_param,
       const vector<map<int, vector<int> > >& all_match_indices,
       const vector<vector<int> >& all_neg_indices,
       const map<int, vector<NormalizedBBox> >& all_gt_bboxes,
-      double* conf_pred_data, double* conf_gt_data);
+      double* pose_pred_data, double* pose_gt_data);
 
 
 template <typename Dtype>

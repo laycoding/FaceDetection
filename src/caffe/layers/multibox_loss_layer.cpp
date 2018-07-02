@@ -541,7 +541,7 @@ void MultiBoxLossLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
       // } else {
       //   // The diff is already computed and stored.
       //   bottom[1]->ShareDiff(conf_pred_);
-      //}
+      // }
       // The diff is already computed and stored.
       bottom[6]->ShareDiff(pose_pred_);
     }

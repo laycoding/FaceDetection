@@ -1970,6 +1970,7 @@ void EncodeConfPrediction(const Dtype* conf_data, const int num,
 }
 
 // Explicite initialization.
+template <typename Dtype>
 template void EncodeConfPrediction(const float* conf_data, const int num,
       const int num_priors, const MultiBoxLossParameter& multibox_loss_param,
       const vector<map<int, vector<int> > >& all_match_indices,

@@ -1970,7 +1970,6 @@ void EncodeConfPrediction(const Dtype* conf_data, const int num,
 }
 
 // Explicite initialization.
-template <typename Dtype>
 template void EncodeConfPrediction(const float* conf_data, const int num,
       const int num_priors, const MultiBoxLossParameter& multibox_loss_param,
       const vector<map<int, vector<int> > >& all_match_indices,
@@ -1985,6 +1984,7 @@ template void EncodeConfPrediction(const double* conf_data, const int num,
       double* conf_pred_data, double* conf_gt_data);
 
 //new for pose
+template <typename Dtype>
 void EncodePosePrediction(const Dtype* pose_data, const int num,
       const int num_priors, const MultiBoxLossParameter& multibox_loss_param,
       const vector<map<int, vector<int> > >& all_match_indices,

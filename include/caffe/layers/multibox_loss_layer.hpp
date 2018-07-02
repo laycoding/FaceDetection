@@ -116,6 +116,7 @@ class MultiBoxLossLayer : public LossLayer<Dtype> {
 
   int num_matches_;
   int num_conf_;
+  int num_pose_;
   vector<map<int, vector<int> > > all_match_indices_;
   vector<vector<int> > all_neg_indices_;
 

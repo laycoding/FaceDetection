@@ -198,11 +198,11 @@ void MultiBoxLossLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
   const Dtype* gt_data = bottom[3]->cpu_data();
   const Dtype* arm_conf_data = NULL;
   const Dtype* arm_loc_data = NULL;
-  const Dtype* odm_pose_data = NULL;
+  const Dtype* pose_data = NULL;
   vector<LabelBBox> all_arm_loc_preds;
   if (bottom.size() >= 5) {
 	arm_conf_data = bottom[4]->cpu_data();
-  odm_pose_data = bottom[6]->cpu_data();
+  pose_data = bottom[6]->cpu_data();
   }
   if (bottom.size() >= 6) {
 	arm_loc_data = bottom[5]->cpu_data();

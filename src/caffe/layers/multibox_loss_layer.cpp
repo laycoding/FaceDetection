@@ -28,6 +28,8 @@ void MultiBoxLossLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
   CHECK(multibox_loss_param.has_num_classes()) << "Must provide num_classes.";
   num_classes_ = multibox_loss_param.num_classes();
   CHECK_GE(num_classes_, 1) << "num_classes should not be less than 1.";
+  aspect_classes_ = 4;
+  CHECK_EQ(aspect_classes_, 4) << "aspect_classes_ should be 4"
   share_location_ = multibox_loss_param.share_location();
   loc_classes_ = share_location_ ? 1 : num_classes_;
   background_label_id_ = multibox_loss_param.background_label_id();
@@ -324,12 +326,12 @@ void MultiBoxLossLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
     if (pose_loss_type_ == MultiBoxLossParameter_ConfLossType_SOFTMAX) {
       pose_shape.push_back(num_pose_);
       pose_gt_.Reshape(pose_shape);
-      pose_shape.push_back(num_classes_);
+      pose_shape.push_back(aspect_classes_);
       pose_pred_.Reshape(pose_shape);
     } else if (pose_loss_type_ == MultiBoxLossParameter_ConfLossType_LOGISTIC) {
       pose_shape.push_back(1);
       pose_shape.push_back(num_pose_);
-      pose_shape.push_back(num_classes_);
+      pose_shape.push_back(aspect_classes_);
       pose_gt_.Reshape(pose_shape);
       pose_pred_.Reshape(pose_shape);
     } else {
@@ -483,6 +485,65 @@ void MultiBoxLossLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
         // The diff is already computed and stored.
         bottom[1]->ShareDiff(conf_pred_);
       }
+    }
+  }
+
+  // Back propagate on pose prediction.
+  if (propagate_down[6]) {
+    Dtype* pose_bottom_diff = bottom[6]->mutable_cpu_diff();
+    caffe_set(bottom[6]->count(), Dtype(0), pose_bottom_diff);
+    if (num_pose_ >= 1) {
+      vector<bool> pose_propagate_down;
+      // Only back propagate on prediction, not ground truth.
+      pose_propagate_down.push_back(true);
+      pose_propagate_down.push_back(false);
+      pose_loss_layer_->Backward(pose_top_vec_, pose_propagate_down,
+                                 pose_bottom_vec_);
+      // Scale gradient.
+      Dtype normalizer = LossLayer<Dtype>::GetNormalizer(
+          normalization_, num_, num_priors_, num_matches_);
+      Dtype loss_weight = top[0]->cpu_diff()[0] / normalizer;
+      caffe_scal(pose_pred_.count(), loss_weight,
+                 pose_pred_.mutable_cpu_diff());
+      // Copy gradient back to bottom[1].
+      // const Dtype* pose_pred_diff = pose_pred_.cpu_diff();
+      // if (do_neg_mining_) {
+      //   int count = 0;
+      //   for (int i = 0; i < num_; ++i) {
+      //     // Copy matched (positive) bboxes scores' diff.
+      //     const map<int, vector<int> >& match_indices = all_match_indices_[i];
+      //     for (map<int, vector<int> >::const_iterator it =
+      //          match_indices.begin(); it != match_indices.end(); ++it) {
+      //       const vector<int>& match_index = it->second;
+      //       CHECK_EQ(match_index.size(), num_priors_);
+      //       for (int j = 0; j < num_priors_; ++j) {
+      //         if (match_index[j] <= -1) {
+      //           continue;
+      //         }
+      //         // Copy the diff to the right place.
+      //         caffe_copy<Dtype>(num_classes_,
+      //                           conf_pred_diff + count * num_classes_,
+      //                           conf_bottom_diff + j * num_classes_);
+      //         ++count;
+      //       }
+      //     }
+      //     // Copy negative bboxes scores' diff.
+      //     for (int n = 0; n < all_neg_indices_[i].size(); ++n) {
+      //       int j = all_neg_indices_[i][n];
+      //       CHECK_LT(j, num_priors_);
+      //       caffe_copy<Dtype>(num_classes_,
+      //                         conf_pred_diff + count * num_classes_,
+      //                         conf_bottom_diff + j * num_classes_);
+      //       ++count;
+      //     }
+      //     conf_bottom_diff += bottom[1]->offset(1);
+      //   }
+      // } else {
+      //   // The diff is already computed and stored.
+      //   bottom[1]->ShareDiff(conf_pred_);
+      //}
+      // The diff is already computed and stored.
+      bottom[6]->ShareDiff(pose_pred_);
     }
   }
 

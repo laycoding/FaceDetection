@@ -101,8 +101,8 @@ void MultiBoxLossLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
   } else {
     LOG(FATAL) << "Unknown pose loss type or no pose loss(sence for arm)";
   }
- } 
-//
+ 
+
   // Set up localization loss layer.
   loc_weight_ = multibox_loss_param.loc_weight();
   loc_loss_type_ = multibox_loss_param.loc_loss_type();
@@ -507,41 +507,7 @@ void MultiBoxLossLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
                  pose_pred_.mutable_cpu_diff());
       // Copy gradient back to bottom[1].
       // const Dtype* pose_pred_diff = pose_pred_.cpu_diff();
-      // if (do_neg_mining_) {
-      //   int count = 0;
-      //   for (int i = 0; i < num_; ++i) {
-      //     // Copy matched (positive) bboxes scores' diff.
-      //     const map<int, vector<int> >& match_indices = all_match_indices_[i];
-      //     for (map<int, vector<int> >::const_iterator it =
-      //          match_indices.begin(); it != match_indices.end(); ++it) {
-      //       const vector<int>& match_index = it->second;
-      //       CHECK_EQ(match_index.size(), num_priors_);
-      //       for (int j = 0; j < num_priors_; ++j) {
-      //         if (match_index[j] <= -1) {
-      //           continue;
-      //         }
-      //         // Copy the diff to the right place.
-      //         caffe_copy<Dtype>(num_classes_,
-      //                           conf_pred_diff + count * num_classes_,
-      //                           conf_bottom_diff + j * num_classes_);
-      //         ++count;
-      //       }
-      //     }
-      //     // Copy negative bboxes scores' diff.
-      //     for (int n = 0; n < all_neg_indices_[i].size(); ++n) {
-      //       int j = all_neg_indices_[i][n];
-      //       CHECK_LT(j, num_priors_);
-      //       caffe_copy<Dtype>(num_classes_,
-      //                         conf_pred_diff + count * num_classes_,
-      //                         conf_bottom_diff + j * num_classes_);
-      //       ++count;
-      //     }
-      //     conf_bottom_diff += bottom[1]->offset(1);
-      //   }
-      // } else {
-      //   // The diff is already computed and stored.
-      //   bottom[1]->ShareDiff(conf_pred_);
-      // }
+
       // The diff is already computed and stored.
       bottom[6]->ShareDiff(pose_pred_);
     }
@@ -552,7 +518,8 @@ void MultiBoxLossLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
   all_neg_indices_.clear();
 }
 
+
 INSTANTIATE_CLASS(MultiBoxLossLayer);
 REGISTER_LAYER_CLASS(MultiBoxLoss);
 
-}  // namespace caffe
+} // namespace caffe

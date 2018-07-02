@@ -75,6 +75,21 @@ class MultiBoxLossLayer : public LossLayer<Dtype> {
   // confidence loss.
   Blob<Dtype> conf_loss_;
 
+  // The internal pose loss layer.
+  shared_ptr<Layer<Dtype> > psoe_loss_layer_;
+  PoseLossType pose_loss_type_;
+  float pose_weight_;
+  // bottom vector holder used in Forward function.
+  vector<Blob<Dtype>*> pose_bottom_vec_;
+  // top vector holder used in Forward function.
+  vector<Blob<Dtype>*> pose_top_vec_;
+  // blob which stores the confidence prediction.
+  Blob<Dtype> pose_pred_;
+  // blob which stores the corresponding ground truth label.
+  Blob<Dtype> pose_gt_;
+  // confidence loss.
+  Blob<Dtype> pose_loss_;
+
   MultiBoxLossParameter multibox_loss_param_;
   int num_classes_;
   bool share_location_;

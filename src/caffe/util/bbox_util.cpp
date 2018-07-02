@@ -2019,7 +2019,7 @@ void EncodePosePrediction(const Dtype* pose_data, const int num,
   //            mining_type != MultiBoxLossParameter_MiningType_NONE);
   // }
   //do_neg_mining = mining_type != MultiBoxLossParameter_MiningType_NONE;
-  const PoseLossType pose_loss_type = multibox_loss_param.pose_loss_type();
+  const ConfLossType pose_loss_type = multibox_loss_param.pose_loss_type();
   int count = 0;
   for (int i = 0; i < num; ++i) {
     if (all_gt_bboxes.find(i) != all_gt_bboxes.end()) {
